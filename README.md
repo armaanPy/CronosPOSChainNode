@@ -99,6 +99,27 @@ Hosting this application involves X parts.
 $ git clone https://github.com/armaanPy/DxJSH237891z
 ```
 
+### Part 2: Copy PEM private key on to EC2 Instance
+
+* In order for Terraform and Ansible to be able to communicate with our EC2 Instance we need to generate a key pair and copy that over to our EC2 instance.
+ 
+* To do so, first we will need to generate a key pair. To do this, navigate to EC2 on the AWS Management Console and on the menu bar navigate to "Network & Security" -> "Key Pairs".
+
+* In the Key Pairs page, click on "Create Key Pair" on the top right hand corner of the page.
+
+* Under the Name section, enter: crypt0def1x
+
+* For Key pair type, select "RSA".
+
+* Finally for the Private key file format, select ".pem". Once you click create, the key file will be downloaded on to your local machine - keep this safe.
+
+* Now using WinSCP, connect to your EC2 instance (using the initial key pair you created to access the EC2 in the first section of the guide).
+
+* Once you are in WinSCP, copy the crypt0def1x.pem file to the ~/.ssh/ location.
+
+
 ### Part 2: Update Terraform variables
+
+* H
 
 ### Part 3: Update Ansible hosts
