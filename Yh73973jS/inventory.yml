@@ -1,0 +1,6 @@
+all:
+  hosts:
+    [Enter Public IP]:
+      ansible_ssh_extra_args: -o StrictHostKeyChecking=no
+      ansible_ssh_private_key_file: /home/ec2-user/.ssh/crypt0def1.pem
+      ansible_user: ec2-user
