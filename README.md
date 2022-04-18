@@ -135,8 +135,8 @@ $ vi ~/DxJSH237891z/Zjdh377SZx/variables.tf
 Edit:
 
 variable "aws_region" {
-  description = "**Hong Kong**"
-  default     = "**ap-east-1**"
+  description = "Hong Kong"
+  default     = "ap-east-1"
 }
 ```
 
@@ -158,7 +158,6 @@ $ terraform apply
 
 * Now if you navigate to the EC2 page, you will see that your newly provisioned instance is now visible with the same public IP that was output.
 
-vm_public_ip = ""
 
 ### Part 3: Update Ansible hosts
 
