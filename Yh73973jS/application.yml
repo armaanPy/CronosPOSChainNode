@@ -28,7 +28,7 @@
         group: ec2-user
         mode: 0700
     
-      - name: Pause for 5 seconds to ensure directory was copied.
+    - name: Pause for 5 seconds to ensure directory was copied.
       pause:
         seconds: 5
     
