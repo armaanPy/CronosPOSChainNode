@@ -165,7 +165,7 @@ $ terraform apply
 
 ```
 $ cd ~/DxJSH237891z/Yh73973jS/
-$ vi inventory.tml
+$ vi inventory.yml
 
 Replace [Enter Public IP] with the public IP that was output after your Terraform resource was created (or alternatively get the public IP of your host from the EC2 Instances page.
 
