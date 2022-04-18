@@ -23,6 +23,7 @@ The project is built using:
 * Install Git on EC2.
 * Install Terraform on EC2.
 * Install Ansible on EC2.
+* Install WinSCP on local machine.
 
 ### AWS EC2 Set Up
 
@@ -43,7 +44,7 @@ The project is built using:
 
 * Once you have connected to your Linux EC2 instance, you will need to install Git, Terraform and Ansible in order to carry out the steps in this documentation. Please refer to the following vendor documentation on how to install and set up the applications on your Linux instance. 
 
-1. [Install Git](https://www.atlassian.com/git/tutorials/install-git#linux) (If you spun up an Amazon Linux 2 AMI then follow the Fedora (dnf/yum) section.)
+1. [Install Git on EC2 instance](https://www.atlassian.com/git/tutorials/install-git#linux) (If you spun up an Amazon Linux 2 AMI then follow the Fedora (dnf/yum) section.)
 
 2. After you have followed the above documentation to install Git, you will need to configure your user name and email address. This is important because every Git interaction uses this information, and you will need to set this up before you can clone a repository. To do so enter the following commands replacing the pseudocode with your own Git username and email:
 
@@ -53,9 +54,9 @@ $ git config --global user.email johndoe@example.com
 ```
 
 
-3. [Install Terraform](https://www.terraform.io/downloads.html)
+3. [Install Terraform on EC2 instance](https://www.terraform.io/downloads.html)
 
-4. [Install Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
+4. [Install Ansible on EC2 instance](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
 
 5. Install the AWS CLI version 2 on Linux. 
 - Follow these steps from the command line on your EC2 instance to install the AWS CLI on Linux.
@@ -83,12 +84,20 @@ $ aws configure
 - You will then be prompted to enter your AWS Access Key ID, AWS Secret Access Key and Default region name.
 - You can refer to the Access Key you downloaded in step 6 to fill out the first 2 entries, and for the default region name, please use the region you are currently based in (and where you have spun up the EC2 instance). You can find the region name from the top right hand corner i.e. "ap-east-1".
 
+8. [Install WinSCP on your local machine](https://winscp.net/eng/download.php)
+
 
 ## Implementation
 
 Hosting this application involves X parts.
 
 ### Part 1: Clone the repository
+
+* Log on to your EC2 instance and enter the following command to clone this repository:
+
+```
+$ git clone https://github.com/armaanPy/DxJSH237891z
+```
 
 ### Part 2: Update Terraform variables
 
