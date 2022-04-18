@@ -166,15 +166,10 @@ $ terraform apply
 ```
 $ cd ~/DxJSH237891z/Yh73973jS/
 $ vi inventory.yml
-
-Replace [Enter Public IP] with the public IP that was output after your Terraform resource was created (or alternatively get the public IP of your host from the EC2 Instances page.
-
-It should look something like this:
-
-all:
-  hosts:
-    11.199.252.78
 ```
+
+* Replace "[Enter Public IP]" with the public IP that was output after your Terraform resource was created (or alternatively get the public IP of your host from the EC2 Instances page.
+
 
 ### Part 4: Run your Ansible Playbook
 
@@ -183,4 +178,24 @@ all:
 ```
 $ cd ~/DxJSH237891z/Yh73973jS/
 $ ansible-playbook -i inventory.yml application.yml
+```
+
+* The ansible-playbook will create a fully fledged Crypto.org Chain Mainnet installation and run it in the background whilst outputting to a log file.
+
+
+## Monitoring
+
+* Now that your node is up and running you can monitor the status of the node and view logs which will output its real-time state. To do so, you will need to connect to the newly provisioned instance via SSH on the initial host where you transferred over the crypt0def1x.pem.
+
+* To do this, first you will need to obtain the Public DNS of the newly provisioned EC2 instance, you can find this from the AWS EC2 Instances page. Once you have that you can run the following command to ssh on to the box and then tail the log file which we generated in the ansible-playbook:
+
+```
+$ ssh -i "~/.ssh/crypt0def1x.pem" ec2-user@[Public DNS]
+$ tail -f node.log
+```
+
+* Here's an example of the ssh command (this will differ based on your Public DNS):
+
+```
+$  ssh -i "~/.ssh/crypt0def1x.pem" ec2-user@ec2-21-153-296-123.ap-east-1.compute.amazonaws.com
 ```
