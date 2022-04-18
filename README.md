@@ -115,11 +115,73 @@ $ git clone https://github.com/armaanPy/DxJSH237891z
 
 * Now using WinSCP, connect to your EC2 instance (using the initial key pair you created to access the EC2 in the first section of the guide).
 
-* Once you are in WinSCP, copy the crypt0def1x.pem file to the ~/.ssh/ location.
+* Once you are in WinSCP, copy the crypt0def1x.pem file to the ~/.ssh/ location. Note: In order to see the hidden .ssh file you will need to go to WinSCP -> Options -> Preferences -> Panels and tick "Show hidden files"
+
+* Once the crypt0def1x.pem file has been transferred over to ~/.ssh/ on your EC2 instance, you will need to make sure it is not publically viewable, to do so run the following commands.
+
+```
+$ cd ~/.ssh
+$ chmod 400 crypt0def1x.pem
+```
 
 
 ### Part 2: Update Terraform variables
 
-* H
+* Within the ~/DxJSH237891z/Zjdh377SZx/variables.tf file, you will need to update the following aws_region default variable to whichever AWS region you wish to provision the EC2 node which will host the Blockchain installation.
+
+```
+$ vi ~/DxJSH237891z/Zjdh377SZx/variables.tf
+
+Edit:
+
+variable "aws_region" {
+  description = "**Hong Kong**"
+  default     = "**ap-east-1**"
+}
+```
+
+i.e. If you are wish to provision the node in North Virginia (us-east-1), then change the description and default variables as intended.
+
+
+### Part 3: Provision the instance via Terraform
+
+* Now it's time to provision your instance, to do so:
+
+```
+$ cd ~/DxJSH237891z/Zjdh377SZx/
+$ terraform init
+$ terraform plan
+$ terraform apply
+```
+
+* Once your resources have been created you will notice an output detailing the "vm_public_ip" - note this down as we will need it for our Ansible step. Alternatively, you can find the public IP of the newly provisioned instance from the EC2 page.
+
+* Now if you navigate to the EC2 page, you will see that your newly provisioned instance is now visible with the same public IP that was output.
+
+vm_public_ip = ""
 
 ### Part 3: Update Ansible hosts
+
+* Now you have to update the Ansible inventory.yml with the public IP of the new instance you just provisioned. To do so:
+
+```
+$ cd ~/DxJSH237891z/Yh73973jS/
+$ vi inventory.tml
+
+Replace [Enter Public IP] with the public IP that was output after your Terraform resource was created (or alternatively get the public IP of your host from the EC2 Instances page.
+
+It should look something like this:
+
+all:
+  hosts:
+    11.199.252.78
+```
+
+### Part 4: Run your Ansible Playbook
+
+* Run your Ansible Playbook using the following commands:
+
+```
+$ cd ~/DxJSH237891z/Yh73973jS/
+$ ansible-playbook -i inventory.yml application.yml
+```
