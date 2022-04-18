@@ -19,6 +19,15 @@
       shell: "./bin/chain-maind version"
       become: yes
 
+    - name: Create /data dir.
+      file:
+        path: ~/ansible/files/.chain-maind/data
+        state: directory
+
+    - name: Pause for 5 seconds to ensure directory was created.
+      pause:
+        seconds: 5
+
     - name: Copying .chain-maind directory.
       become: yes
       copy:
