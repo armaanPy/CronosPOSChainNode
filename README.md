@@ -8,7 +8,8 @@ This project contains detailed documentation for setting up a Full Node on Crypt
 
 ### Built With
 
-The project is built using,
+The project is built using:
+* Crypto.org Chain Mainnet
 * AWS
 * Terraform
 * Ansible
@@ -42,7 +43,7 @@ The project is built using,
 
 * Once you have connected to your Linux EC2 instance, you will need to install Git, Terraform and Ansible in order to carry out the steps in this documentation. Please refer to the following vendor documentation on how to install and set up the applications on your Linux instance. 
 
-1. [Install Git](https://www.atlassian.com/git/tutorials/install-git#linux)
+1. [Install Git](https://www.atlassian.com/git/tutorials/install-git#linux) (If you spun up an Amazon Linux 2 AMI then follow the Fedora (dnf/yum) section.)
 
 2. After you have followed the above documentation to install Git, you will need to configure your user name and email address. This is important because every Git interaction uses this information, and you will need to set this up before you can clone a repository. To do so enter the following commands replacing the pseudocode with your own Git username and email:
 
@@ -85,7 +86,23 @@ $ aws configure
 
 ## Implementation
 
-Hosting this application involves three parts.
+Hosting this application involves X parts.
+
+### Part 1: Clone the repository
+
+### Part 2: Update Terraform variables
+
+### Part 3: Update Ansible hosts
+
+
+
+
+
+
+
+
+
+
 
 ### Part 1: Standing up the Infrastructure
 
