@@ -18,24 +18,28 @@
     - name: Verify chain-maind version is 1.2.1 (through shell).
       shell: "./bin/chain-maind version"
       become: yes
-
-    - name: Ansible file module create directory
+        
+    - name: Copying .chain-maind directory.
+      become: yes
+      copy:
+        src:  ~/DxJSH237891z/Yh73973jS/files/.chain-maind
+        dest: ~/.chain-maind
+        owner: ec2-user
+        group: ec2-user
+        mode: 0700
+    
+      - name: Pause for 5 seconds to ensure directory was copied.
+      pause:
+        seconds: 5
+    
+    - name: Create /data dir within .chain-maind.
       file:
-        path: ~/ansible/files/.chain-maind/data
+        path: ~/.chain-maind/data
         state: directory
 
     - name: Pause for 5 seconds to ensure directory was created.
       pause:
         seconds: 5
-        
-    - name: Copying .chain-maind directory.
-      become: yes
-      copy:
-        src:  ~/ansible/files/.chain-maind
-        dest: ~/.chain-maind
-        owner: ec2-user
-        group: ec2-user
-        mode: 0700
 
     - name: Initialize chain-maind.
       shell:
