@@ -58,6 +58,12 @@ $ git config --global user.email johndoe@example.com
 
 4. [Install Ansible on EC2 instance](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
 
+* If you spun up an Amazon Linux 2 EC2 Instance, then the command you will have to use to install Ansible is as follows, however refer to the vendor documentation for indepth information:
+
+```
+$ sudo amazon-linux-extras install ansible2
+```
+
 5. Install the AWS CLI version 2 on Linux. 
 - Follow these steps from the command line on your EC2 instance to install the AWS CLI on Linux.
 
@@ -83,6 +89,7 @@ $ aws configure
 
 - You will then be prompted to enter your AWS Access Key ID, AWS Secret Access Key and Default region name.
 - You can refer to the Access Key you downloaded in step 6 to fill out the first 2 entries, and for the default region name, please use the region you are currently based in (and where you have spun up the EC2 instance). You can find the region name from the top right hand corner i.e. "ap-east-1".
+- You can leave the Default output format as blank.
 
 8. [Install WinSCP on your local machine](https://winscp.net/eng/download.php)
 
