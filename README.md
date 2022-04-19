@@ -185,6 +185,8 @@ $ ansible-playbook -i inventory.yml application.yml
 
 ## Monitoring
 
+### Tailing the log file
+
 * Now that your node is up and running you can monitor the status of the node and view logs which will output its real-time state. To do so, you will need to connect to the newly provisioned instance via SSH on the initial host where you transferred over the crypt0def1x.pem.
 
 * To do this, first you will need to obtain the Public DNS of the newly provisioned EC2 instance, you can find this from the AWS EC2 Instances page. Once you have that you can run the following command to ssh on to the box and then tail the log file which we generated in the ansible-playbook:
@@ -199,3 +201,35 @@ $ tail -f node.log
 ```
 $  ssh -i "~/.ssh/crypt0def1x.pem" ec2-user@ec2-21-153-296-123.ap-east-1.compute.amazonaws.com
 ```
+
+### Utilising Amazon CloudWatch
+
+* You can use Amazon CloudWatch Logs to monitor, store, and access your log files from Amazon Elastic Compute Cloud (Amazon EC2) instances - which it makes it an ideal tool to monitor the logs/health of your node.
+
+* [How to Install and configure the CloudWatch Logs agent on a running EC2 Linux instance](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/QuickStartEC2Instance.html)
+
+
+## Security
+TO DO: Talk about creating a better aws_security_group resource in Terraform that restricts access etc.
+TO DO:
+
+## Advanced
+TO DO: Create a bash script to automate the installation and setup of all software and have that as an alternative to manually installing.
+
+## Software upgrades with minimal downtime
+
+## Issues faced
+TO DO: make this section more neat
+
+- sed commands had quotes within them which were breaking the entire command, therefore had to use the YAML literal block string syntax to not have to escape any quotes.
+
+- when trying to reach the public IP of the terraform provisioned host I was getting an error that "Permissions 0664 for 'crypt0def1.pem' are too open." therefore had to ensure that my key was not publicly viewable by running chmod 400 crypt0def1.pem
+
+- TASK [Run security package updates.] 
+fatal: [16.163.242.145]: FAILED! => {"changed": false, "msg": "No package matching 'update' found available, installed or updated", "rc": 126, "results": ["No package matching 'update' found available, installed or updated"]} therefore used yum: name=* state=latest
+
+- Unable to pass or fail step where I need to verify the sha256sum checksum of the crypto genesis.json is "OK". Tried using an expect response and logging the output under a debug task but no success therefore just implemented the command itself without any validation (pretty useless)
+
+- Ansible script would create directorys but failed in starting up the node due to error "~/.chain-maind/config/genesis.json" does not exist, therefore after thorough investigation I found that the ~/chain-maind/ directory only generates after you run a command, so I ran the ./bin/chain-maind version command in the script to generate it. A better update to the crypto.org documentation would be to generate this hidden file after you extract the binary from github. HOWEVER, ansible shell and command files would not generate this file... therefore had to push .chain-maind to git and have the file copied over to remote via ansible-playbook
+
+- Ansible job would not end as it was continuously running through the node script, so started it in background and outputted log to another file.
