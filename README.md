@@ -116,6 +116,8 @@ $ git clone https://github.com/armaanPy/DxJSH237891z
 
 * Under the Name section, enter: crypt0def1x
 
+* Please note: you can name the private key whatever you wish, however for the purpose of this demo I have instructed to name it as crypt0def1x as this is the variable configured in the Terraform variables.tf file. If you wish to choose a different name please do so, and I will advise on the changes needed later on in Step 3.
+
 * For Key pair type, select "RSA".
 
 * Finally for the Private key file format, select ".pem". Once you click create, the key file will be downloaded on to your local machine - keep this safe.
@@ -132,7 +134,7 @@ $ chmod 400 crypt0def1x.pem
 ```
 
 
-### Part 2: Update Terraform variables
+### Part 3: Update Terraform variables
 
 * Within the ~/DxJSH237891z/Zjdh377SZx/variables.tf file, you will need to update the following aws_region default variable to whichever AWS region you wish to provision the EC2 node which will host the Blockchain installation.
 
@@ -149,8 +151,20 @@ variable "aws_region" {
 
 i.e. If you are wish to provision the node in North Virginia (us-east-1), then change the description and default variables as intended.
 
+* If you can recall in Step 2, you had the ability to choose your own private key name, if you did not proceed with the placeholder name and created a private key with a different name then you will need to rename this variable within the ~/DxJSH237891z/Zjdh377SZx/variables.tf file:
 
-### Part 3: Provision the instance via Terraform
+```
+$ vi ~/DxJSH237891z/Zjdh377SZx/variables.tf
+
+Edit:
+
+variable "key_name" {
+  description = " SSH keys to connect to ec2 instance"
+  default     =  "crypt0def1"
+}
+```
+
+### Part 4: Provision the instance via Terraform
 
 * Now it's time to provision your instance, to do so:
 
@@ -166,7 +180,7 @@ $ terraform apply
 * Now if you navigate to the EC2 page, you will see that your newly provisioned instance is now visible with the same public IP that was output.
 
 
-### Part 3: Update Ansible hosts
+### Part 5: Update Ansible hosts
 
 * Now you have to update the Ansible inventory.yml with the public IP of the new instance you just provisioned. To do so:
 
@@ -178,7 +192,7 @@ $ vi inventory.yml
 * Replace "[Enter Public IP]" with the public IP that was output after your Terraform resource was created (or alternatively get the public IP of your host from the EC2 Instances page.
 
 
-### Part 4: Run your Ansible Playbook
+### Part 6: Run your Ansible Playbook
 
 * Run your Ansible Playbook using the following commands:
 
@@ -218,7 +232,13 @@ $  ssh -i "~/.ssh/crypt0def1x.pem" ec2-user@ec2-21-153-296-123.ap-east-1.compute
 
 ## Security
 TO DO: Talk about creating a better aws_security_group resource in Terraform that restricts access etc.
-TO DO:
+* To ensure the security of this deployment I have made sure to make sure of AWS Access Keys and Secret Access Keys built in to the EC2 instance rather than creating a separate Terraform file which will hold those details. This makes sure that your Access and Secret Access Keys are encrypted within the EC2 instance.
+
+* For maximum security, you are in charge of who has access to this deployment. In part 2 you created and copied over a private key on to your EC2 instance, at the time of creating this key, only the creator has access and can distribute it as they please. This is to ensure only you have access over the deployment and other users who can also access it.
+
+* An EC2 Security Group was also defined in the main.tf file which provisioned the EC2 instance. This security group only allows for ingress traffic from port 22 (which is the SSH port), this means that you can only access the instance via SSH. This was implemented to stop the occurrence of brute force attacks or API floods from the HTTP/HTTPS ports and so on. If you wish to access the deployment by a means other than SSH then you can alter the main.tf file to create a Security Group of your liking.
+
+* In the Ansible-playbook I also implemented a task that would update all the packages on the instance and remove any obsolete packages. This was to ensure the security of the host where the deployment is taking place. To put into context how this step helps with security, this task to update package would have updated all applications which use log4j, therefore you would not have been affected by the Log4Shell exploit.
 
 ## Advanced
 TO DO: Create a bash script to automate the installation and setup of all software and have that as an alternative to manually installing.
@@ -226,17 +246,17 @@ TO DO: Create a bash script to automate the installation and setup of all softwa
 ## Software upgrades with minimal downtime
 
 ## Issues faced
-TO DO: make this section more neat
 
-- sed commands had quotes within them which were breaking the entire command, therefore had to use the YAML literal block string syntax to not have to escape any quotes.
+* Along the way there were many issues that were created with the implementation of this deployment, I have listed these below along with the steps I took to resolve them.
 
-- when trying to reach the public IP of the terraform provisioned host I was getting an error that "Permissions 0664 for 'crypt0def1.pem' are too open." therefore had to ensure that my key was not publicly viewable by running chmod 400 crypt0def1.pem
+1. The sed commands to update minimum gas price to stop transaction spamming and modify the configuration of persistent_peers and create_empty_blocks_intervals had quotes within them which were breaking the application.yml YAML syntax, I therefore had to use the YAML literal block string syntax to not have to escape any quotes.
 
-- TASK [Run security package updates.] 
-fatal: [16.163.242.145]: FAILED! => {"changed": false, "msg": "No package matching 'update' found available, installed or updated", "rc": 126, "results": ["No package matching 'update' found available, installed or updated"]} therefore used yum: name=* state=latest
+2. When trying to reach the Public IP of the Terraform provisioned host I was getting an error that "Permissions 0664 for 'crypt0def1.pem' are too open." Therefore I had to ensure that my key was not publicly viewable by running chmod 400 crypt0def1.pem.
 
-- Unable to pass or fail step where I need to verify the sha256sum checksum of the crypto genesis.json is "OK". Tried using an expect response and logging the output under a debug task but no success therefore just implemented the command itself without any validation (pretty useless)
+3. On attempt to update all the packages on the Linux box I faced the following error {"changed": false, "msg": "No package matching 'update' found available, installed or updated"} to resolve this I had to make changes to the Ansible-playbook and I instead used "yum: name=* state=latest" in the task to update, and this resolved it.
 
-- Ansible script would create directorys but failed in starting up the node due to error "~/.chain-maind/config/genesis.json" does not exist, therefore after thorough investigation I found that the ~/chain-maind/ directory only generates after you run a command, so I ran the ./bin/chain-maind version command in the script to generate it. A better update to the crypto.org documentation would be to generate this hidden file after you extract the binary from github. HOWEVER, ansible shell and command files would not generate this file... therefore had to push .chain-maind to git and have the file copied over to remote via ansible-playbook
+4. I was unable to pass or fail step where I need to verify the sha256sum checksum of the crypto genesis.json is "OK". I tried using an expect response and logging the output under a debug task but to no avail therefore I implemented a shell check in the Ansible script and advised to run the playbook in verbose mode so you can see the status of this verification.
 
-- Ansible job would not end as it was continuously running through the node script, so started it in background and outputted log to another file.
+5. The Ansible script would create directories but failed in starting up the node due to the error ""~/.chain-maind/config/genesis.json" does not exist", therefore after thorough investigation I found that the ~/.chain-maind/ directory only generates after you run a command, so I ran the ./bin/chain-maind version command in the script to generate it. This step worked when deploying manually, however when I implemented a task in the Ansible script to run the version comand to generate the .chain-maind directory, it would still not generate. Therefore I had to implement a step in the Ansible playbook that would copy the directory from local and shift it to the remote provisioned host.
+
+6. The Ansible job would not end as it was continuously running through the chain-maind script, so I made Ansible start it in background and output the log to another file.
