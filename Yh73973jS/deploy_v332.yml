@@ -1,0 +1,40 @@
+---
+- hosts: all
+  become: yes
+  become_user: root
+  become_method: sudo
+  tasks:
+    - name: Create v3.3.2 upgrade directory.
+      file:
+          path: ~/upgrade_v332
+          state: directory
+
+    - name: Install Crypto.org v3.3.2 Chain binaries from official Github.
+      shell: "curl -LOJ https://github.com/crypto-org-chain/chain-main/releases/download/v3.3.2/chain-main_3.3.2_Linux_x86_64.tar.gz"
+      become: yes
+      args:
+        chdir: ~/upgrade_v332
+
+    - name: Extract chain-main v3.3.2 gzip compressed data.
+      shell: "tar -zxvf chain-main_3.3.2_Linux_x86_64.tar.gz"
+      become: yes
+      args:
+        chdir: ~/upgrade_v332
+
+    - name: Verify chain-maind version is 3.3.2 (through shell).
+      shell: "./bin/chain-maind version"
+      become: yes
+      args:
+        chdir: ~/upgrade_v332
+
+     - name: Transfer the upgrade_v212.sh script from local to remote
+       copy: src=~/upgrade_v332.sh dest=~/upgrade_v332 mode=0777
+
+     - name: Execute the upgrade_v212.sh script.
+       command: sh ~/upgrade_v332/upgrade_v332.sh
+
+      - name:  Start the node and output logging to node.log.
+        shell: "nohup ./bin/chain-maind start > node.log 2>&1 &"
+        become: yes
+        args:
+           chdir: ~/upgrade_v332
