@@ -1,5 +1,5 @@
 #!/bin/bash
-# Scipt which is used to determine the upgrade height of 922,363, at which users will see the following error message on the chain-maind: ERR UPGRADE "v2.0.0" NEEDED
+# Script which is used to determine the upgrade height of 922,363, at which users will see the following error message on the chain-maind: ERR UPGRADE "v2.0.0" NEEDED
 
 LOG=~/node.log
 ERROR='ERR UPGRADE "v2.0.0" NEEDED'
