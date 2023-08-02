@@ -113,7 +113,7 @@ $ aws --version |
 
 - Log on to your EC2 instance and enter the following command to clone this repository:
 
-| $ git clonehttps://github.com/armaanPy/DxJSH237891z |
+| $ git clone https://github.com/armaanPy/DxJSH237891z |
 | --- |
 
 ### Part 2: Copy PEM private key on to EC2 Instance
