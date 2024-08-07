@@ -1,4 +1,7 @@
-# crypto.org_chain_mainnet_host
+# CronosPoSChainNode
+
+> **Note**  
+> Crypto.org Chain becomes Cronos POS chain - Read more here: https://cronos-pos.org/
 
 ## About the Project
 
